@@ -1,0 +1,22 @@
+version: '3'
+services:
+  registry:
+    container_name: registry
+    image: registry:2
+    restart: always
+    ports:
+      - '5000:5000'
+    volumes:
+      - '${REGISTRY_DATA}/registry:/var/lib/registry'
+
+  webui:
+    container_name: webui
+    image: hyper/docker-registry-web
+    depends_on:
+      - registry
+    links:
+      - registry
+    ports:
+      - '8080:8080'
+    volumes:
+      - '${PWD}/config.yml:/conf/config.yml:ro'
